@@ -38,7 +38,7 @@ const AppLayout = ({ children }) => {
                     md: 작은 데스크탑
                 */}
                 <Col xs={24} md={6}>
-                    {isLoggedIn ? <UserProfile /> : <LoginForm />}
+                    {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn}/> : <LoginForm setIsLoggedIn={setIsLoggedIn}/>}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}

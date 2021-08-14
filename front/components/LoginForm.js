@@ -7,7 +7,11 @@ const ButtonWrapper = styled.div`
     margin-top: 10px;
 `
 
-const LoginForm = () => {
+const FormWrapper = styled(Form)`
+    padding: 10px;
+`
+
+const LoginForm = ({ setIsLoggedIn }) => {
     const [id, setId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,11 +23,16 @@ const LoginForm = () => {
         setPassword(e.target.value);
     }, []); 
 
+    const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
+        console.log(id, password);
+        setIsLoggedIn(true);
+    }, [id, password]);
+
     /*
         리렌더링 : 리턴 부분을 다시그리는게 아니라 state, 인라인스타일의 객체 , 바뀐 컴포넌트만 다시 그린다
     */
     return (
-        <Form>
+        <FormWrapper onFinish={onSubmitForm}>
             <div>
                 <label htmlFor="user-id">아이디</label>
                 <br />
@@ -56,7 +65,7 @@ const LoginForm = () => {
                 <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>           
-        </Form>
+        </FormWrapper>
     )
 }
 
