@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
+import useInput from '../hooks/useInput';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -12,23 +14,16 @@ const FormWrapper = styled(Form)`
 `
 
 const LoginForm = ({ setIsLoggedIn }) => {
-    const [id, setId] = useState("");
-    const [password, setPassword] = useState("");
-
-    const onChangeId = useCallback((e) => {
-        setId(e.target.value);
-    }, []);
-    // useCallback : 주로 props로 넘겨주는 함수 Caching
-    const onChangePassword = useCallback((e) => {
-        setPassword(e.target.value);
-    }, []); 
-
+    const [id, onChangeId] = useInput("");
+    const [password, onChangePassword] = useInput("");       
+   
     const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
         console.log(id, password);
         setIsLoggedIn(true);
     }, [id, password]);
 
     /*
+        // useCallback : 주로 props로 넘겨주는 함수 Caching
         리렌더링 : 리턴 부분을 다시그리는게 아니라 state, 인라인스타일의 객체 , 바뀐 컴포넌트만 다시 그린다
     */
     return (
@@ -67,6 +62,10 @@ const LoginForm = ({ setIsLoggedIn }) => {
             </ButtonWrapper>           
         </FormWrapper>
     )
+}
+
+LoginForm.propTypes = {
+    setIsLoggedIn: PropTypes.func.isRequired
 }
 
 export default LoginForm;
