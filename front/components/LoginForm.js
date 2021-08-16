@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { Form, Input, Button } from 'antd';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -13,19 +15,17 @@ const FormWrapper = styled(Form)`
     padding: 10px;
 `
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+    const dispatch = useDispatch();
     const [id, onChangeId] = useInput("");
     const [password, onChangePassword] = useInput("");       
    
     const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
         console.log(id, password);
-        setIsLoggedIn(true);
+        dispatch(loginAction({ id, password }));
     }, [id, password]);
 
-    /*
-        // useCallback : 주로 props로 넘겨주는 함수 Caching
-        리렌더링 : 리턴 부분을 다시그리는게 아니라 state, 인라인스타일의 객체 , 바뀐 컴포넌트만 다시 그린다
-    */
+   
     return (
         <FormWrapper onFinish={onSubmitForm}>
             <div>
