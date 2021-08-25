@@ -7,13 +7,13 @@ export const initialState = {
         },
         content: '첫 번째 게시글 #해시태그 #익스프레스',
         Images: [{
-            src: 'https://imgur.com/IkTegYG'
+            src: 'https://i.pinimg.com/564x/69/45/24/694524d1fb6d857b3de806c9da878870.jpg'
         },
         {
-            src: 'https://imgur.com/xl5JxwJ'
+            src: 'https://i.pinimg.com/564x/e1/9d/79/e19d79732b9507c1b2b7001cdaa8ae3a.jpg'
         },
         {
-            src: 'https://imgur.com/3AdbUEP'
+            src: 'https://i.pinimg.com/564x/60/e0/1f/60e01ff3c0175ea53801d639657d187e.jpg'
         }],
         Comments: [{
             User: {
@@ -29,7 +29,9 @@ export const initialState = {
         }
         ]
     }],
-    ImagePaths: [],
+    ImagePaths: [
+
+    ],
     postAdded: false
 }
 
