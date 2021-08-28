@@ -50,15 +50,42 @@ prev.name = "란자"; ???
 ```
 
 ## 3. Middleware
-    action을 실행하기전에 인터셉트해서 미들웨어의 코드를 실행한다.
-```js
-action을 실행하기전에 로그를 남겨준다
-const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
-    console.log(action); // action을 실행하기전에 한번 실행해주는 미들웨어
-    // if (typeof action === 'function') { // thunk에서는 action을 함수로 둘 수 있다
-    //     return action(dispatch, getState, extraArgument);
-    // }
+- action을 실행하기전에 인터셉트해서 미들웨어의 코드를 실행한다.
+    ```js
+    action을 실행하기전에 로그를 남겨준다
+    const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
+        console.log(action); // action을 실행하기전에 한번 실행해주는 미들웨어
+        // if (typeof action === 'function') { // thunk에서는 action을 함수로 둘 수 있다
+        //     return action(dispatch, getState, extraArgument);
+        // }
 
-    return next(action);
-}
-```
+        return next(action);
+    }
+    ```
+
+- redux-thunk
+
+    ```js
+    // 한 함수에서 여러번 dispath를 하게 도와준다. 더이상의 기능은 없다고한다
+    // thunk 식 request, success, failure action 함수
+    export const loginAction = (data) => {
+        return (dispatch, getState) => {
+            const state = getState();
+            dispatch(loginRequestAction());
+            axios.post('/api/login')
+            .then((res) => {
+                dispatch(loginSuccessAction(res.data))
+            })
+            .catch((err) => {
+                dispatch(logoutFailureAction(err))
+            })
+        }
+    }
+    ```
+
+- redux-saga
+
+        실수로 로그인 클릭을 두번했을때 thunk는 두번 다 요청이 된다.(이런 걸 방지하는 부분을 직접 구현해야됨)
+        saga의 경우 "takelatest"는 두번이 동시에 들어왔을 때 가장 마지막 요청만 받는다
+        인피니티 스크롤 같은 경우 스크롤할때마다 수백번 fetch를 하면 dos공격이 될 수 있다. 이런 부분을 saga에서
+        지원해주는 부분이 있다. "throttle"의 경우 1초에 3번 action을 방지한다는 식으로 세팅이 가능하다.
