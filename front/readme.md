@@ -11,6 +11,7 @@ redux, context API , mobx , 그래프큐엘의 아폴로
 
 3. Context API
 - 비동기를 지원해주지 않는다.
+- 직접 비동기 액션을 구현하다보면 리덕스와 똑같다.
 
 
 # Redux
@@ -46,4 +47,18 @@ prev.name = "란자"; ???
 
     const style = useMemo(() => ({ marginTop: 10 }), []) 식으로 넘겨주는 방법이나 
     styled component 추천
+```
+
+## 3. Middleware
+    action을 실행하기전에 인터셉트해서 미들웨어의 코드를 실행한다.
+```js
+action을 실행하기전에 로그를 남겨준다
+const loggerMiddleware = ({ dispatch, getState }) => (next) => (action) => {
+    console.log(action); // action을 실행하기전에 한번 실행해주는 미들웨어
+    // if (typeof action === 'function') { // thunk에서는 action을 함수로 둘 수 있다
+    //     return action(dispatch, getState, extraArgument);
+    // }
+
+    return next(action);
+}
 ```

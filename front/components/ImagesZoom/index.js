@@ -5,7 +5,7 @@ import { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator, Global 
 // func`` 함수호출도됨
 
 const ImagesZoom = ({ images, onClose }) => {
-    const [currentSlide, setCurrentSlide] = useState();
+    const [currentSlide, setCurrentSlide] = useState(0);
 
     return (
         <Overlay>
