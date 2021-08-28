@@ -89,3 +89,66 @@ prev.name = "란자"; ???
         saga의 경우 "takelatest"는 두번이 동시에 들어왔을 때 가장 마지막 요청만 받는다
         인피니티 스크롤 같은 경우 스크롤할때마다 수백번 fetch를 하면 dos공격이 될 수 있다. 이런 부분을 saga에서
         지원해주는 부분이 있다. "throttle"의 경우 1초에 3번 action을 방지한다는 식으로 세팅이 가능하다.
+    ```js
+    
+        all : 배열을 받으면 동시에 모두 실행
+
+        ======
+        fork: 함수 실행 => 비동기 함수 호출 , 바로 실행
+        axios.post('api/login')
+        yield put({
+            type: 'LOG_IN_SUCCESS',
+            data: result.data
+        })
+        ======
+        call: 함수실행이지만 다르다 => 동기 함수 호출 , response가 오고 다음함수 실행
+        axios.post('api/login')
+            .then((res) => {
+                yield put({
+                    type: 'LOG_IN_SUCCESS',
+                    data: result.data
+                })
+            })
+        ======
+        take: 액션 실행되서 결과 오기 전까지 기다림 ??
+        put: 리덕스의 dispatch
+        
+    ```
+
+
+
+# generator ??
+1. 
+```js
+const gen = function* () {
+    console.log(1)
+    yield; // 함수를 실행할 때 위에서 아래로 다 실행하는 것이 아니라 yield에서 중단이 가능하다
+    console.log(2)
+    yield; 
+    console.log(3)
+    yield 4 // 이런식으로 return 값도 줄 수 잇다
+}
+
+const generator = gen();
+generator.next(); // 1, {value: undefined, done: false}
+generator.next(); // 2, {value: undefined, done: false}
+generator.next(); // 3, {value: 4, done: false}
+generator.next(); // undefined {value: undefined, done: true}
+```
+
+2. 
+```js
+let i = 0;
+const gen = function* () {
+    while(true) { // 금기시된 코드같지만 제네레이터의 경우 yield에서 바로 중단된다
+        yield i++;
+    }
+}
+const generator = gen();
+generato.next() // 1
+generato.next() // 2
+generato.next() // 3
+
+무한의 개념과 이벤트가 발생해야 실행되는 이벤트리스너 개념을 표현할 수 있어서 이런 특성을 활용해 
+redux-saga를 만들었다고 한다
+```
