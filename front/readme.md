@@ -90,7 +90,9 @@ prev.name = "란자"; ???
         인피니티 스크롤 같은 경우 스크롤할때마다 수백번 fetch를 하면 dos공격이 될 수 있다. 이런 부분을 saga에서
         지원해주는 부분이 있다. "throttle"의 경우 1초에 3번 action을 방지한다는 식으로 세팅이 가능하다.
     ```js
-    
+        import { 
+            all, fork, call, put, take, takeEvery, takeLatest, delay, throttle 
+        } from 'redux-saga/effects';
         all : 배열을 받으면 동시에 모두 실행
 
         ======
@@ -112,7 +114,17 @@ prev.name = "란자"; ???
         ======
         take: 액션 실행되서 결과 오기 전까지 기다림 ??
         put: 리덕스의 dispatch
+         
+        while(true) {
+            yield take('LOG_IN_REQUEST', logIn); 이러지 않으면 1회용만 사용가능하다
+        }
+
+        takeEvery가 while(true)와 같은효과를 내준다 
+        그러나 동시에 두번 클릭햇을시 두번 요청을하게되므로 마지막요청만 허용하는 takeLatest 사용
+        takeLatest는 응답을 두번 받지 않을뿐 실제 서버에는 요청이 두개가 저장되므로 서버에서도 따로 방지를 해줘야한다.
         
+        yield throttle ('ADD_POST_REQUEST', addPost, 10000); 시간동안 같은요청은 실행도 되지않는다
+     
     ```
 
 
