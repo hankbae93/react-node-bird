@@ -17,26 +17,26 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const { isLoggingIn } = useSelector(state => state.user);
-    const [id, onChangeId] = useInput("");
+    const { logInLoading } = useSelector(state => state.user);
+    const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");       
    
     const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
         console.log(id, password);
         dispatch(loginRequestAction({ id, password }));
-    }, [id, password]);
+    }, [email, password]);
 
    
     return (
         <FormWrapper onFinish={onSubmitForm}>
             <div>
-                <label htmlFor="user-id">아이디</label>
+                <label htmlFor="user-email">이메일</label>
                 <br />
                 <Input 
-                    name="user-id"
+                    name="user-email"
                     type="email"
-                    value={id} 
-                    onChange={onChangeId} 
+                    value={email} 
+                    onChange={onChangeEmail} 
                     required 
                 />
             </div>
@@ -58,7 +58,7 @@ const LoginForm = () => {
             const style = useMemo(() => ({ marginTop: 10 }), []) 식으로 넘겨주는 방법이나 styled component 추천
             */}
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
+                <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>           
         </FormWrapper>
