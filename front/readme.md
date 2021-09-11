@@ -179,3 +179,48 @@ redux-saga를 만들었다고 한다
 # Eslint
 
     협업하는 프로젝트에서 코드 스타일을 맞추는 데 큰 의의를 둔다.
+
+# 다른 리듀서의 데이터가 필요할 때
+
+```js
+const dummyUser = (data) => ({
+  ...data,
+  nickname: "제로초",
+  id: 1,
+  Posts: [{ id: 1 }], // post 리듀서의 데이터가 필요할 때 어떻게 해야될까
+  Followings: [
+    { nickname: "란자" },
+    { nickname: "만자" },
+    { nickname: "자자" },
+  ],
+  Followers: [{ nickname: "란자" }, { nickname: "만자" }, { nickname: "자자" }],
+});
+```
+
+    상태는 action을 통해서만 바꿀 수 있기 때문에 action을 먼저 만들자
+
+```js
+function* addPost(action) {
+  try {
+    yield delay(1000);
+    // const result = yield call(addPostAPI, action.data);
+    const id = shortid.generate();
+    yield put({
+      type: ADD_POST_SUCCESS,
+      data: {
+        id,
+        content: action.data,
+      },
+    });
+    yield put({
+      type: ADD_POST_TO_ME, // user 리듀서에 있는 액션을 import 해서 실행
+      data: id,
+    });
+  } catch (err) {
+    yield put({
+      type: ADD_POST_FAILURE,
+      data: err.reponse.data,
+    });
+  }
+}
+```

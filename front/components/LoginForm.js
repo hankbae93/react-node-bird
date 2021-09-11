@@ -22,8 +22,8 @@ const LoginForm = () => {
     const [password, onChangePassword] = useInput("");       
    
     const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
-        console.log(id, password);
-        dispatch(loginRequestAction({ id, password }));
+        console.log(email, password);
+        dispatch(loginRequestAction({ email, password }));
     }, [email, password]);
 
    
