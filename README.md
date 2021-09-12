@@ -224,3 +224,43 @@ function* addPost(action) {
   }
 }
 ```
+
+# immer
+
+상태의 불변성을 지키기 위해서 이렇게 긴 코드를 치다보면 이 작업을 줄여줄 라이브러리가 필요해지기 마련입니다.
+
+리액트에서는 불변성을 지켜주는 use-immer 라이브러리가 있음.
+
+```js
+case ADD_COMMENT_SUCCESS: {
+           const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
+           const post = {...state.mainPosts[postIndex]};
+           post.Comments = [dummyComment(action.data.content), ...post.Comments];
+           const mainPosts = [...state.mainPosts];
+           mainPosts[postIndex] = post;
+
+            return {
+                ...state,
+                addCommentLoading: false,
+                addCommentDone: true,
+                mainPosts
+            }
+        }
+```
+
+이제 immer를 사용한 케이스입니다.
+
+```js
+import produce from 'immer';
+
+const reducer = (state = initialState, action) => {
+    return produce((state, draft) => { // 이제 state가 아닌 draft로 직접 변경한다.
+      case ADD_COMMENT_SUCCESS:
+        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
+        post.Comments.unshift(dummyComment(action.data.content));
+        draft.addCommentLoading = false;
+        draft.addCommentDone = true;
+        break;
+    })
+}
+```
