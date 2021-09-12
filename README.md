@@ -254,7 +254,7 @@ case ADD_COMMENT_SUCCESS: {
 import produce from 'immer';
 
 const reducer = (state = initialState, action) => {
-    return produce((state, draft) => { // 이제 state가 아닌 draft로 직접 변경한다.
+    return produce((state, draft => { // 이제 state가 아닌 draft로 직접 변경한다.
       case ADD_COMMENT_SUCCESS:
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         post.Comments.unshift(dummyComment(action.data.content));
