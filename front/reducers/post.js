@@ -3,47 +3,17 @@ import produce from 'immer';
 import faker from 'faker';
 
 export const initialState = {
-    mainPosts: [{
-        id: 1,
-        User: {
-            id: 1,
-            nickname: '란자'
-        },
-        content: '첫 번째 게시글 #해시태그 #익스프레스',
-        Images: [{
-            id: shortid.generate(),
-            src: 'https://i.pinimg.com/564x/69/45/24/694524d1fb6d857b3de806c9da878870.jpg'
-        },
-        {
-            id: shortid.generate(),
-            src: 'https://i.pinimg.com/564x/e1/9d/79/e19d79732b9507c1b2b7001cdaa8ae3a.jpg'
-        },
-        {
-            id: shortid.generate(),
-            src: 'https://i.pinimg.com/564x/60/e0/1f/60e01ff3c0175ea53801d639657d187e.jpg'
-        }],
-        Comments: [{
-            id: shortid.generate(),
-            User: {
-                id: shortid.generate(),
-                nickname: 'nero'
-            },
-            content: '우왕 ㅋ 굳ㅋ '
-        },
-        {
-            User: {
-                nickname: 'ranja'
-            },
-            content: '대답 '
-        }
-        ]
-    }],
-    ImagePaths: [
+    mainPosts: [],        
+    ImagePaths: [],
 
-    ],
+    hasMorePosts: true,
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
+    
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
 
     removePostLoading: false,
     removePostDone: false,
@@ -54,24 +24,26 @@ export const initialState = {
     addCommentError: null,
 }
 
-initialState.mainPosts = initialState.mainPosts.concat(Array(20).fill().map((v, i) => ({
-     id: shortid.generate(),
-     User: {
-        id: shortid.generate(),
-        nickname: faker.name.findName()
-     },
-     content: faker.lorem.paragraph(),
-     Images: [{
-         src: faker.image.imageUrl()
-     }],
-     Comments: [{
-         User: {
-             id: shortid.generate(),
-             nickname: faker.name.findName()
-         },
-         content: faker.lorem.sentence()
-     }],
-})))
+export const generateDummyPost = (number) => Array(number).fill().map((v, i) => ({
+    id: shortid.generate(),
+    User: {
+       id: shortid.generate(),
+       nickname: faker.name.findName()
+    },
+    content: faker.lorem.paragraph(),
+    Images: [{
+        src: faker.image.image()
+    }],
+    Comments: [{
+        User: {
+            id: shortid.generate(),
+            nickname: faker.name.findName()
+        },
+        content: faker.lorem.sentence()
+    }],
+}))
+
+// initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10))
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';

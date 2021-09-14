@@ -1,4 +1,4 @@
-import { all, fork, call, put, take, takeEvery, takeLatest, delay } from 'redux-saga/effects';
+import { all, fork, call, put, take, throttle , takeEvery, takeLatest, delay } from 'redux-saga/effects';
 import axios from 'axios';
 import shortid from 'shortid';
 
@@ -6,15 +6,33 @@ import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, 
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, 
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
+    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
+    generateDummyPost
 } from '../reducers/post';
 import {
     ADD_POST_TO_ME, REMOVE_POST_OF_ME
 } from '../reducers/user';
 
 
-function* watchAddPost() {
-    yield takeLatest(ADD_POST_REQUEST, addPost);
+function loadPostsAPI(data) {
+    return axios.post('api/posts', data)
 }
+
+function* loadPosts(action) {
+    try {
+        yield delay(5000); 
+        yield put({
+            type: LOAD_POSTS_SUCCESS,
+            data: generateDummyPost(10)
+        })       
+    } catch (err) {
+        yield put({
+            type: LOAD_POSTS_FAILURE,
+            data: err.reponse.data,
+        })
+    }    
+}
+
 
 function addPostAPI(data) {
     return axios.post('api/add_post', data)
@@ -44,10 +62,6 @@ function* addPost(action) {
     }    
 }
 
-function* watchRemovePost() {
-    yield takeLatest(REMOVE_POST_REQUEST, removePost);
-}
-
 function removePostAPI(data) {
     return axios.post('api/remove_post', data)
 }
@@ -73,9 +87,7 @@ function* removePost(action) {
     }    
 }
 
-function* watchAddComment() {
-    yield takeLatest(ADD_COMMENT_REQUEST, addComment);
-}
+
 
 function addCommentAPI(data) {
     return axios.Comment(`api/post/${data.post_id}/comment`, data)
@@ -96,8 +108,25 @@ function* addComment(action) {
     }    
 }
 
+function* watchLoadPosts() {
+    yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+}
+
+function* watchAddPost() {
+    yield takeLatest(ADD_POST_REQUEST, addPost);
+}
+
+function* watchAddComment() {
+    yield takeLatest(ADD_COMMENT_REQUEST, addComment);
+}
+
+function* watchRemovePost() {
+    yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
+
 export default function* postSaga(){
     yield all([       
+        fork(watchLoadPosts),        
         fork(watchAddPost),        
         fork(watchAddComment),        
         fork(watchRemovePost),        
