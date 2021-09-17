@@ -1,13 +1,29 @@
-const http = require('http');
-const server = http.createServer((req, res) => {
-    console.log(req.url, req.method);
-    res.write('<h1>Hello node</h1>');
+const express = require('express');
 
-    
-    res.write('Hello node');
-    res.write('Hello node');
-    res.write('Hello node');
-    res.write('Hello node');
-    res.end('Hello node');
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('<h1>Hello Express</h1>')
+});
+
+app.get('/api', (req, res) => {
+    res.send('<h1>Hello Api</h1>')
+});
+
+app.get('/api/posts', (req, res) => {
+    res.json([
+        { id: 1, content: 'hello' },
+        { id: 2, content: 'hell2o' },
+        { id: 3, content: 'h3ello' },
+    ])
 })
-server.listen(3065, () => console.log("서버 실행 중"))
+
+app.post('/api/post', (req, res) => {
+    res.json({ id: 1, content: 'hello' },)
+})
+
+app.delete('/api/post', (req, res) => {
+    res.json({ id: 1 })
+})
+
+app.listen(3065, () => console.log("서버 실행 중"))

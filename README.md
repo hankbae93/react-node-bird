@@ -264,3 +264,15 @@ const reducer = (state = initialState, action) => {
     })
 }
 ```
+
+# http method
+
+```js
+app.get => 가져오기
+app.post => 생성
+app.put => 전체 수정
+app.delete => 제거
+app.patch => 부분 수정
+app.options => 찔러보기? (요청)
+app.head => 헤더만 가져오기(헤더 / 바디)
+```
