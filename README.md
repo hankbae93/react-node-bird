@@ -276,3 +276,8 @@ app.patch => 부분 수정
 app.options => 찔러보기? (요청)
 app.head => 헤더만 가져오기(헤더 / 바디)
 ```
+
+# sequelize
+
+    mysql 언어 대신 자바스크립트로 DB를 컨트롤할 수 있게 해주는 라이브러리
+    config.json에 DB, username, password정보를 담아 node와 mysql을 연결할 때 도와준다.
