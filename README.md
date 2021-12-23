@@ -281,3 +281,16 @@ app.head => 헤더만 가져오기(헤더 / 바디)
 
     mysql 언어 대신 자바스크립트로 DB를 컨트롤할 수 있게 해주는 라이브러리
     config.json에 DB, username, password정보를 담아 node와 mysql을 연결할 때 도와준다.
+
+# CORS
+
+브라우저가 서버에게 요청할 때 브라우저가 차단하는 문제. 서버와 서버사이의 통신에서는 문제가 생기지 않는다.
+
+해결방법
+
+- Proxy 설정: 브라우저가 프론트서버에 요청하고 프론트서버가 백엔드 서버에 요청
+- Access-Control-Allow-Origin' header: 백엔드 서버에서 해당 브라우저 허용 처리
+
+```js
+const cors = require("cors"); // 백엔드에서 해당라이브러리로 해결을하기도한다
+```

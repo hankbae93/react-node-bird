@@ -1,3 +1,11 @@
+# DB 세팅
+
+```js
+npx sequelize db:create
+
+npm run dev
+```
+
 # DB 관계형
 
 ```js

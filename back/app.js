@@ -1,16 +1,24 @@
 const express = require('express');
+const cors = require('cors')
+
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models')
-const app = express();
+const passportConfig = require('./passport');
 
+const app = express();
 db.sequelize.sync()
 .then(() => {
     console.log('db 연결성공')
 })
 .catch(console.error)
+passportConfig()
 
 // 프론트단에서 보내는 데이터를 익스프레스가 라우터에서 처리할 수 있게 변환해준다.
+app.use(cors({
+    origin: "*",
+    credentials: false,
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 

@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
-
+import Router from 'next/router';
 import useInput from '../hooks/useInput';
 import AppLayout from '../components/AppLayout';
 import { SIGN_UP_REQUEST } from '../reducers/user';
@@ -15,7 +15,19 @@ const ErrorMessage = styled.div`
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const { signUpLoading } = useSelector(state => state.user)
+    const { signUpLoading, signUpDone, signUpError } = useSelector(state => state.user)
+
+    useEffect(() => {
+       if(signUpDone) {
+        Router.push('/')
+       }
+    }, [signUpDone])
+    useEffect(() => {
+       if(signUpError) {
+        alert(signUpError)
+       }
+    }, [signUpError])
+
     const [email, onChangeEmail] = useInput("");
     const [nickname, onChangeNickname] = useInput("");
     const [password, onChangePassword] = useInput("");
@@ -44,7 +56,7 @@ const SignUp = () => {
             return setTermError(true);
         }
         console.log(email, nickname, password);
-        dispatchEvent({
+        dispatch({
             type: SIGN_UP_REQUEST,
             data: { email, password, nickname}
         })
