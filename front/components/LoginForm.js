@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState,useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Form, Input, Button } from 'antd';
@@ -17,9 +17,16 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const { logInLoading } = useSelector(state => state.user);
+    const { logInLoading, logInError } = useSelector(state => state.user);
     const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");       
+   
+    useEffect(() => {
+        console.log(logInError, "logInError")
+       if (logInError) {
+           alert(logInError)
+       }
+    }, [logInError])
    
     const onSubmitForm = useCallback(() => { // antd는 e.preventDefault() 적용되어있음
         console.log(email, password);

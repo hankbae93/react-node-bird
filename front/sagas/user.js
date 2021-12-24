@@ -72,7 +72,7 @@ function* logIn(action) {
     } catch (err) {
         yield put({
             type: LOG_IN_FAILURE,
-            error: err.reponse.data,
+            error: err.response.data,
         })
     }    
 }
@@ -82,16 +82,14 @@ function* watchLogOut() {
 }
 
 function logOutAPI() {
-    return axios.post('/logout')
+    return axios.post('/user/logout')
 }
 
 function* logOut() {
     try {
-        yield delay(1000)        
-        // const result = yield call(logOutAPI);
+        yield call(logOutAPI);
         yield put({
             type: LOG_OUT_SUCCESS,
-            // data: result.data
         })
     } catch (err) {
         yield put({

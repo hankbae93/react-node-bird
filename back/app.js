@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 
+
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 const db = require('./models')
@@ -54,6 +55,9 @@ app.get('/posts', (req, res) => {
 
 app.use('/post', postRouter);
 app.use('/user', userRouter);
+// 에러처리 미들웨어 작성 가능
+// app.use((err, req, res, next) => { 
 
+// })
 
 app.listen(3065, () => console.log("서버 실행 중 1234"))

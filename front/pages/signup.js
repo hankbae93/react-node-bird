@@ -16,7 +16,13 @@ const ErrorMessage = styled.div`
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone, signUpError } = useSelector(state => state.user)
+    const { signUpLoading, signUpDone, signUpError, me } = useSelector(state => state.user)
+
+    useEffect(() => {
+        if ((me && me.id)) {
+            Router.replace('/') // push는 뒤로가기하면 그페이지 나오지만 replace는 기록이 사라짐
+        }
+    }, [me && me.id])
 
     useEffect(() => {
        if(signUpDone) {

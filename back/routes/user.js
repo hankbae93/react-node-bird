@@ -1,12 +1,13 @@
 const express = require('express');
 const bcrypt = require('bcrypt'); // 암호화(해쉬화) 라이브러리
 const passport = require('passport');
-
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { User } = require('../models');
+const db = require('../models');
 
 const router = express.Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) { // 서버 에러
             console.error(err);
@@ -21,18 +22,34 @@ router.post('/login', (req, res, next) => {
                 console.error(loginErr)
                 return next(loginErr)
             }
-            return res.status(200).json(user)
+            const fullUserWithoutPassword = await User.findOne({ 
+                where: { id: user.id },
+                attributes: {
+                    exclude: ['password']
+                },
+                // ['id', 'nickname', 'email'], // db table에서 원하는 컬럼만 고를 수 잇다 
+                include: [{
+                    model: db.Post,
+                }, {
+                    model: db.User,
+                    as: 'Followings',
+                }, {
+                    model: db.User,
+                    as: 'Followers',
+                }]
+            })
+            return res.status(200).json(fullUserWithoutPassword)
         });
     })(req, res, next);
 });
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
     req.logout();
     req.session.destroy();
     res.send('ok');
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
     try {
         const exUser = await User.findOne({
            where: {
