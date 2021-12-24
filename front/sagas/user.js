@@ -111,17 +111,16 @@ function signUpAPI(data) {
 
 function* signUp(action) {
     try {
-        // yield delay(1000)      
         const result = yield call(signUpAPI, action.data)          
-        console.log(result)
+        console.log(result, "회원가입 요청 성공 RES")
         yield put({
             type: SIGN_UP_SUCCESS,
-            // data: result.data
         })
     } catch (err) {
+        console.error(err)
         yield put({
             type: SIGN_UP_FAILURE,
-            error: err.reponse.data,
+            error: err.response.data,
         })
     }    
 }

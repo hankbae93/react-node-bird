@@ -4,10 +4,11 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import Router from 'next/router';
 import useInput from '../hooks/useInput';
-import AppLayout from '../components/AppLayout';
 import { SIGN_UP_REQUEST } from '../reducers/user';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+
+import AppLayout from '../components/AppLayout';
 
 const ErrorMessage = styled.div`
     color: red;
@@ -38,7 +39,7 @@ const SignUp = () => {
     const onChangePasswordCheck = useCallback((e) => {        
         setPasswordCheck(e.target.value);
         setPasswordError(e.target.value !== password);
-    }, []);
+    }, [passwordCheck]);
     
     const [term, setTerm] = useState(false);
     const [termError, setTermError] = useState(false);

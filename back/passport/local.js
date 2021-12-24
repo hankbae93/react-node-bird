@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const { User } = require('../models');
 
 module.exports = () => {
-    passport.use(new LocalStrategy({
+    passport.use(new LocalStrategy({ // 로그인 전략
         usernameField: 'email',
         passwordField: 'password'
     }, async (email, password, done) => {
@@ -18,7 +18,7 @@ module.exports = () => {
                 return done(null, false, { reason: '존재하지 않는 사용자입니다! '});
             }
     
-            const result = bcrypt.compare(password, user.password);
+            const result = await bcrypt.compare(password, user.password); // 보낸 비밀번호와 DB password 비교
             if (result) {
                 return done(null, user);
             }
