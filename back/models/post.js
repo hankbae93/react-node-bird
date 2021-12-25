@@ -19,6 +19,7 @@ module.exports = class Post extends Model {
     });
   }
   static associate(db) {
+    // 관계형 메서드가 생긴다. add :더하기 / set :수정 / get :가져오기 (includes로 대신할 수 잇다)
     db.Post.belongsTo(db.User); // post.addUser, post.getUser, post.setUser
     db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' }); // post.addHashtags
     db.Post.hasMany(db.Comment); // post.addComments, post.getComments
