@@ -7,6 +7,42 @@ const db = require('../models');
 
 const router = express.Router();
 
+router.get('/', async (req, res, next) => { // GET /user
+    try {
+        if (req.user) {
+            const user = await User.findOne({
+                where: { id: req.user.id }
+            })
+            const fullUserWithoutPassword = await User.findOne({ 
+                where: { id: user.id },
+                attributes: {
+                    exclude: ['password']
+                },                
+                include: [{
+                    model: db.Post,
+                    attributes: ['id'] // 데이터 효율을 위해서 id만 저장한다
+                }, {
+                    model: db.User,
+                    as: 'Followings',
+                    attributes: ['id']
+                }, {
+                    model: db.User,
+                    as: 'Followers',
+                    attributes: ['id']
+                }]
+            })
+            return res.status(200).json(fullUserWithoutPassword)
+        } else {
+            res.status(200).json(null);
+        }
+        
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+    
+})
+
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) { // 서버 에러

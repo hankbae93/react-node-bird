@@ -24,25 +24,6 @@ export const initialState = {
     addCommentError: null,
 }
 
-export const generateDummyPost = (number) => Array(number).fill().map((v, i) => ({
-    id: shortid.generate(),
-    User: {
-       id: shortid.generate(),
-       nickname: faker.name.findName()
-    },
-    content: faker.lorem.paragraph(),
-    Images: [{
-        src: faker.image.image()
-    }],
-    Comments: [{
-        User: {
-            id: shortid.generate(),
-            nickname: faker.name.findName()
-        },
-        content: faker.lorem.sentence()
-    }],
-}))
-
 // initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10))
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
@@ -61,27 +42,6 @@ export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
 
-const dummyPost = (data) => {
-    return {
-        id: data.id,
-        content: data.content,
-        User: {
-            id: 1,
-            nickname: '란자'
-        },
-        Images: [],
-        Comments: []
-    }
-}
-
-const dummyComment = (data) => ({
-    id: shortid.generate(),
-    content: data,
-    User: {
-        id: 1,
-        nickname: '란자'
-    }
-})
 
 export const addPost = (data) => {
     return {
@@ -122,7 +82,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case ADD_POST_SUCCESS:
             draft.addPostLoading = false;
             draft.addPostDone = true;
-            draft.mainPosts.unshift(dummyPost(action.data));
+            draft.mainPosts.unshift(action.data);
             break;
         case ADD_POST_FAILURE:
             draft.addPostLoading = false;
@@ -148,8 +108,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
             draft.addCommentError = null;
             break;
         case ADD_COMMENT_SUCCESS: {
-            const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-            post.Comments.unshift(dummyComment(action.data.content));
+            const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+            post.Comments.unshift(action.data);
             draft.addCommentLoading = false;
             draft.addCommentDone = true;
             break;     

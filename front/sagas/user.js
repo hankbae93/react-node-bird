@@ -6,11 +6,30 @@ import {
     SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, 
     FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE, 
     UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
+    LOAD_MYINFO_REQUEST, LOAD_MYINFO_SUCCESS, LOAD_MYINFO_FAILURE,
+
 } from '../reducers/user';
 
-function* watchFollow() {   
-    yield takeLatest(FOLLOW_REQUEST, follow);
+function signUpAPI(data) {
+    return axios.post('/user', data);
 }
+
+function* signUp(action) {
+    try {
+        const result = yield call(signUpAPI, action.data)          
+        console.log(result, "회원가입 요청 성공 RES")
+        yield put({
+            type: SIGN_UP_SUCCESS,
+        })
+    } catch (err) {
+        console.error(err)
+        yield put({
+            type: SIGN_UP_FAILURE,
+            error: err.response.data,
+        })
+    }    
+}
+
 
 function followAPI(data) {
     return axios.post('/follow', data)
@@ -54,8 +73,25 @@ function* unfollow(action) {
         })
     }    
 }
-function* watchLogin() {   
-    yield takeLatest(LOG_IN_REQUEST, logIn);
+
+
+function loadUserAPI(data) {
+    return axios.get('/user')
+}
+
+function* loadUser(action) {
+    try {
+        const result = yield call(loadUserAPI)
+        yield put({
+            type: LOAD_MYINFO_SUCCESS,
+            data: result.data
+        })
+    } catch (err) {
+        yield put({
+            type: LOAD_MYINFO_FAILURE,
+            error: err.response.data,
+        })
+    }    
 }
 
 function logInAPI(data) {
@@ -77,10 +113,6 @@ function* logIn(action) {
     }    
 }
 
-function* watchLogOut() {
-    yield takeLatest(LOG_OUT_REQUEST, logOut);
-}
-
 function logOutAPI() {
     return axios.post('/user/logout')
 }
@@ -99,33 +131,31 @@ function* logOut() {
     }    
 }
 
+
+
+function* watchLoadUser() {   
+    yield takeLatest(LOAD_MYINFO_REQUEST, loadUser);
+}
+
+function* watchFollow() {   
+    yield takeLatest(FOLLOW_REQUEST, follow);
+}
+
+function* watchLogin() {   
+    yield takeLatest(LOG_IN_REQUEST, logIn);
+}
+
+function* watchLogOut() {
+    yield takeLatest(LOG_OUT_REQUEST, logOut);
+}
+
 function* watchSignUp() {
     yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
 
-function signUpAPI(data) {
-    return axios.post('/user', data);
-}
-
-function* signUp(action) {
-    try {
-        const result = yield call(signUpAPI, action.data)          
-        console.log(result, "회원가입 요청 성공 RES")
-        yield put({
-            type: SIGN_UP_SUCCESS,
-        })
-    } catch (err) {
-        console.error(err)
-        yield put({
-            type: SIGN_UP_FAILURE,
-            error: err.response.data,
-        })
-    }    
-}
-
-
 export default function* userSaga() {
     yield all([
+        fork(watchLoadUser),
         fork(watchFollow),
         fork(watchUnfollow),
         fork(watchLogin),

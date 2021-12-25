@@ -9,7 +9,7 @@ module.exports = () => {
         // done(서버에러, 성공, reason 등등 )
     });
 
-    //로그인 성공후 DB에 데이터받아와 보내준다.
+    //로그인 성공후 라우터에 접근하면 DB에 데이터받아와 보내준다.
     passport.deserializeUser(async (id, done) => { 
         try {
             const user = await User.findOne({ where: { id }});
