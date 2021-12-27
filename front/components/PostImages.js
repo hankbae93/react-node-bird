@@ -28,7 +28,7 @@ const PostImages = ({ images }) => {
                 src={IMG_CDN + images[0].src} 
                 alt={IMG_CDN + images[0].src} 
                 onClick={onZoom} />
-                {showImagesZoom && <ImageZoom images={images} onClose={onClose} />}
+                {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
             </>
         )
     }
@@ -48,7 +48,7 @@ const PostImages = ({ images }) => {
                 src={IMG_CDN + images[1].src} 
                 alt={IMG_CDN + images[1].src} 
                 onClick={onZoom} />
-                {showImagesZoom && <ImageZoom images={images} onClose={onClose} />}
+                {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
             </>
         )
     }
