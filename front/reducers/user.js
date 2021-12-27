@@ -1,9 +1,16 @@
 import produce from 'immer';
 
 const initialState = {
-    loadUserLoading: false, // 유저 정보 가져오기
-    loadUserDone: false,
-    loadUserError: null,
+    
+    loadFollowersLoading: false, // 유저 정보 가져오기
+    loadFollowersDone: false,
+    loadFollowersError: null,
+    loadFollowersLoading: false, // 유저 정보 가져오기
+    loadFollowersDone: false,
+    loadFollowersError: null,
+    loadFollowingsLoading: false, // 유저 정보 가져오기
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
     followLoading: false, // 로그인 시도중
     followDone: false,
     followError: null,
@@ -22,6 +29,12 @@ const initialState = {
     changeNicknameLoading: false, // 닉네임 변경 시도중
     changeNicknameDone: false,
     changeNicknameError: null,   
+    removeFollowerLoading: false, // 유저 정보 가져오기
+    removeFollowerDone: false,
+    removeFollowerError: null,
+    removeFollowingLoading: false, // 유저 정보 가져오기
+    removeFollowingDone: false,
+    removeFollowingError: null,
 
     me: null,
     signUpData: {},
@@ -29,6 +42,26 @@ const initialState = {
 }
 
 
+
+export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
+export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
+export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
+
+// export const REMOVE_FOLLOWING_REQUEST = "REMOVE_FOLLOWER_REQUEST";
+// export const REMOVE_FOLLOWING_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
+// export const REMOVE_FOLLOWING_FAILURE = "REMOVE_FOLLOWER_FAILURE";
+
+// export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
+// export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
+// export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
+
+export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
+export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
+export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
+
+export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST";
+export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
+export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
 
 export const LOAD_MYINFO_REQUEST = "LOAD_MYINFO_REQUEST";
 export const LOAD_MYINFO_SUCCESS = "LOAD_MYINFO_SUCCESS";
@@ -77,6 +110,62 @@ export const logoutRequestAction = () => {
 const reducer = (state = initialState, action) => {
     return produce(state, draft => {
         switch(action.type) {        
+            case REMOVE_FOLLOWER_REQUEST: 
+                draft.removeFollowerLoading = true
+                draft.removeFollowerDone = null
+                draft.removeFollowerError = false
+                break;
+            case REMOVE_FOLLOWER_SUCCESS: 
+                draft.removeFollowerLoading = false
+                draft.removeFollowerDone = true
+                draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+                break;
+            case REMOVE_FOLLOWER_FAILURE: 
+                draft.removeFollowerLoading = false
+                draft.removeFollowerError = action.error
+                break;
+            case LOAD_FOLLOWERS_REQUEST: 
+                draft.loadFollowersLoading = true
+                draft.loadFollowersDone = null
+                draft.loadFollowersError = false
+                break;
+            case LOAD_FOLLOWERS_SUCCESS: 
+                draft.loadFollowersLoading = false
+                draft.loadFollowersDone = true
+                draft.me.Followers = action.data;
+                break;
+            case LOAD_FOLLOWERS_FAILURE: 
+                draft.loadFollowersLoading = false
+                draft.loadFollowersError = action.error
+                break;
+            case LOAD_FOLLOWERS_REQUEST: 
+                draft.loadFollowersLoading = true
+                draft.loadFollowersDone = null
+                draft.loadFollowersError = false
+                break;
+            case LOAD_FOLLOWERS_SUCCESS: 
+                draft.loadFollowersLoading = false
+                draft.loadFollowersDone = true
+                draft.me.Followers = action.data;
+                break;
+            case LOAD_FOLLOWERS_FAILURE: 
+                draft.loadFollowersLoading = false
+                draft.loadFollowersError = action.error
+                break;
+            case LOAD_FOLLOWINGS_REQUEST: 
+                draft.loadFollowingsLoading = true
+                draft.loadFollowingsDone = null
+                draft.loadFollowingsError = false
+                break;
+            case LOAD_FOLLOWINGS_SUCCESS: 
+                draft.loadFollowingsLoading = false
+                draft.loadFollowingsDone = true
+                draft.me.Followings = action.data;
+                break;
+            case LOAD_FOLLOWINGS_FAILURE: 
+                draft.loadFollowingsLoading = false
+                draft.loadFollowingsError = action.error
+                break;
             case LOAD_MYINFO_REQUEST: 
                 draft.loadUserLoading = true
                 draft.loadUserDone = null
@@ -92,7 +181,6 @@ const reducer = (state = initialState, action) => {
                 draft.loadUserError = action.error
                 break;
             case FOLLOW_REQUEST: 
-                console.log('reducer login');
                 draft.followLoading = true
                 draft.followError = null
                 draft.followDone = false
@@ -100,14 +188,13 @@ const reducer = (state = initialState, action) => {
             case FOLLOW_SUCCESS: 
                 draft.followLoading = false                
                 draft.followDone = true
-                draft.me.Followings.push({ id: action.data });
+                draft.me.Followings.push({ id: action.data.UserId });
                 break;               
             case FOLLOW_FAILURE: 
                 draft.followLoading = false                
                 draft.followError = action.error                
                 break;                
             case UNFOLLOW_REQUEST: 
-                console.log('reducer login');
                 draft.unfollowLoading = true
                 draft.unfollowError = null
                 draft.unfollowDone = false
@@ -115,7 +202,7 @@ const reducer = (state = initialState, action) => {
             case UNFOLLOW_SUCCESS: 
                 draft.unfollowLoading = false                
                 draft.unfollowDone = true
-                draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+                draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
                 break;               
             case UNFOLLOW_FAILURE: 
                 draft.unfollowLoading = false                
