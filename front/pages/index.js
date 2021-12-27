@@ -32,24 +32,21 @@ const Home = () => {
 
     useEffect(() => {
         function onScroll() {
-            const scrollY = window.scrollY;
-            const viewHeight = document.documentElement.clientHeight;
-            const domHeight = document.documentElement.scrollHeight
-            // console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
-            //  얼마나 내렷ㅈ는지 + 뷰포트 높이 === 총길이
-            if (scrollY + viewHeight >= domHeight - 300) {
-                if (hasMorePosts && !loadPostsLoading) {
-                    dispatch({
-                        type: LOAD_POSTS_REQUEST,
-                    })
-                }                
-            } 
+          if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+            if (hasMorePosts && !loadPostsLoading) {
+              const lastId = mainPosts[mainPosts.length - 1]?.id;
+              dispatch({
+                type: LOAD_POSTS_REQUEST,
+                lastId,
+              });
+            }
+          }
         }
         window.addEventListener('scroll', onScroll);
         return () => {
-            window.removeEventListener('scroll', onScroll);
-        }
-    }, [hasMorePosts])
+          window.removeEventListener('scroll', onScroll);
+        };
+      }, [hasMorePosts, loadPostsLoading, mainPosts]);
     
     // console.log(mainPosts)
     return (
