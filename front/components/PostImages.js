@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import ImagesZoom from './ImagesZoom';
+import { IMG_CDN } from '../utils/CDN';
 
 const Img = styled.img`
     display: inline-block;
@@ -24,8 +25,8 @@ const PostImages = ({ images }) => {
             <>
                 <Img 
                 role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
-                src={images[0].src} 
-                alt={images[0].src} 
+                src={IMG_CDN + images[0].src} 
+                alt={IMG_CDN + images[0].src} 
                 onClick={onZoom} />
                 {showImagesZoom && <ImageZoom images={images} onClose={onClose} />}
             </>
@@ -37,15 +38,15 @@ const PostImages = ({ images }) => {
                 <Img 
                 role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
                 width="50%"
-                src={images[0].src} 
-                alt={images[0].src} 
+                src={IMG_CDN + images[0].src} 
+                alt={IMG_CDN + images[0].src} 
                 onClick={onZoom} />
 
                 <Img 
                 role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
                 width="50%"
-                src={images[1].src} 
-                alt={images[1].src} 
+                src={IMG_CDN + images[1].src} 
+                alt={IMG_CDN + images[1].src} 
                 onClick={onZoom} />
                 {showImagesZoom && <ImageZoom images={images} onClose={onClose} />}
             </>
@@ -53,7 +54,7 @@ const PostImages = ({ images }) => {
     }
     return (
         <div>
-            <Img role="presentation" width="50%" src={images[0].src} alt={images[0].src} onClick={onZoom} />
+            <Img role="presentation" width="50%" src={IMG_CDN + images[0].src} alt={images[0].src} onClick={onZoom} />
             <div
                 role="presentation"
                 style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle'}}

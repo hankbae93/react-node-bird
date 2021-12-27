@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
 import { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator, Global } from './styles';
+import { IMG_CDN } from '../../utils/CDN';
 // func`` 함수호출도됨
 
 const ImagesZoom = ({ images, onClose }) => {
@@ -28,7 +29,7 @@ const ImagesZoom = ({ images, onClose }) => {
               >
                 {images.map((v) => (
                   <ImgWrapper key={v.src}>
-                    <img src={v.src} alt={v.src} />
+                    <img src={IMG_CDN + v.src} alt={v.src} />
                   </ImgWrapper>
                 ))}
               </Slick>

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan'); // 로깅 툴
+const path = require('path')
 
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
@@ -27,6 +28,8 @@ app.use(cors({
     origin: "http://localhost:3000",
     credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
 }))
+app.use('/', express.static(path.join(__dirname, 'uploads')))
+// 프론트단에서는 localhost:3065로만 볼 수 있고 실제 어느 폴더에 있는지 알 수 없다.
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.COOKIE_SECRET));
