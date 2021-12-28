@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
-import { useSelector } from 'react-redux';
 import Router from 'next/router';
+import { useSelector } from 'react-redux';
+import wrapper from '../store/configureStore';
 import { END } from 'redux-saga';
 import axios from 'axios';
 import useSWR from 'swr';
+import { backUrl } from '../config/config';
 
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
+
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
-import { backUrl } from '../config/config';
 
 const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result) => result.data);
 
@@ -41,6 +42,7 @@ const Profile = () => {
     return '내 정보 로딩중...';
   }
 
+  // 몇번을 렌더하든 훅스는 항상 모두 실행되어야함.
   if (followerError || followingError) {
     console.error(followerError || followingError);
     return <div>팔로잉/팔로워 로딩 중 에러가 발생합니다.</div>;

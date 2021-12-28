@@ -38,15 +38,16 @@ const Post = () => {
     </AppLayout>
   );
 };
-
+// getStaticProps 다이나믹라우팅 시 사용
 // export async function getStaticPaths() {
+// const list = await axios.get('/post/list)
 //   return {
 //     paths: [
-//       { params: { id: '1' } },
+//       { params: { id: '1' } }, // 1번 게시글 미리 빌드
 //       { params: { id: '2' } },
 //       { params: { id: '3' } },
 //     ],
-//     fallback: true,
+//     fallback: true, // 패스배열에 없으면 에러 false, 에러처리
 //   };
 // }
 
