@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'; // next는 import React가 필요없음
 import { useSelector, useDispatch } from 'react-redux';
+import { END } from 'redux-saga';
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -7,6 +8,7 @@ import PostCard from '../components/PostCard';
 
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MYINFO_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
 
 // pages 폴더안에있는 코드를 code spliting 해서 빌드해놓는다
 const Home = () => {
@@ -19,16 +21,7 @@ const Home = () => {
             alert(retweetError);
         }
     }, [retweetError])
-  
 
-    useEffect(() => {
-        dispatch({
-            type: LOAD_MYINFO_REQUEST
-        })
-        dispatch({
-            type: LOAD_POSTS_REQUEST
-        })
-    }, []);
 
     useEffect(() => {
         function onScroll() {
@@ -58,5 +51,19 @@ const Home = () => {
         </AppLayout>
     )
 }
+
+
+// 화면 그리기전에 먼저 서버데이터 받아오기
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log(context)
+  context.store.dispatch({
+    type: LOAD_MYINFO_REQUEST
+  })
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST
+  })
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+})
 
 export default Home;
