@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'; // next는 import React가 필요없음
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
+import axios from 'axios';
+import wrapper from '../store/configureStore';
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
-import { LOAD_MYINFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 // pages 폴더안에있는 코드를 code spliting 해서 빌드해놓는다
 const Home = () => {
@@ -55,9 +56,15 @@ const Home = () => {
 
 // 화면 그리기전에 먼저 서버데이터 받아오기
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log(context)
+  // 브라우저가 아닌 프론트서버에서 실행되는 부분이라 쿠키를 직접 넣어줘야한다.
+  const cookie = context.req ? context.req.headers.cookie : "";
+  axios.defaults.headers.Cookie = "";
+  if (context.req && cookie) { // 쿠키가 공유될 수 있기 때문에 조심해야된다. 
+    axios.defaults.headers.Cookie = cookie;    
+  }
+
   context.store.dispatch({
-    type: LOAD_MYINFO_REQUEST
+    type: LOAD_MY_INFO_REQUEST
   })
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST
