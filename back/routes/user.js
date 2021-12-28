@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt'); // 암호화(해쉬화) 라이브러리
 const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { User } = require('../models');
+const { User, Post, Posts } = require('../models');
 const db = require('../models');
 
 const router = express.Router();
@@ -43,7 +43,40 @@ router.get('/', async (req, res, next) => { // GET /user
     }
     
 })
-
+router.get('/:userId', async (req, res, next) => { // GET /user/1
+    try {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.params.userId },
+        attributes: {
+          exclude: ['password']
+        },
+        include: [{
+          model: Post,
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followings',
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followers',
+          attributes: ['id'],
+        }]
+      })
+      if (fullUserWithoutPassword) {
+        const data = fullUserWithoutPassword.toJSON();
+        data.Posts = data.Posts.length; // 개인정보 침해 예방
+        data.Followers = data.Followers.length;
+        data.Followings = data.Followings.length;
+        res.status(200).json(data);
+      } else {
+        res.status(404).json('존재하지 않는 사용자입니다.');
+      }
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  });
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) { // 서버 에러
@@ -138,6 +171,7 @@ router.get('/followers', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 })
+
 router.get('/followings', isLoggedIn, async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { id: req.user.id }})
@@ -167,6 +201,7 @@ router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => {
         next(error);
     }
 })
+
 router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { id: req.params.userId }})

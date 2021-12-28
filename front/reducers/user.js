@@ -161,6 +161,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadUserLoading = false;
       draft.userInfo = action.data;
       draft.loadUserDone = true;
+      console.log(draft.userInfo, "제발..")
       break;
     case LOAD_USER_FAILURE:
       draft.loadUserLoading = false;
