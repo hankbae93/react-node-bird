@@ -9,7 +9,7 @@ import {
   FOLLOW_REQUEST,
   FOLLOW_SUCCESS, LOAD_FOLLOWERS_FAILURE,
   LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWINGS_FAILURE,
-  LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS,
+  LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS,
   LOAD_USER_FAILURE,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
@@ -25,6 +25,7 @@ import {
   UNFOLLOW_FAILURE,
   UNFOLLOW_REQUEST,
   UNFOLLOW_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
 } from '../reducers/user';
 
 function removeFollowerAPI(data) {
@@ -107,26 +108,6 @@ function* changeNickname(action) {
   }
 }
 
-function loadMyInfoAPI(data) {
-  return axios.get(`/user`);
-}
-
-function* loadMyInfo(action) {
-  try {
-    const result = yield call(loadMyInfoAPI, action.data);
-    yield put({
-      type: LOAD_MY_INFO_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    console.error(err);
-    yield put({
-      type: LOAD_MY_INFO_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
 function loadUserAPI(data) {
   return axios.get(`/user/${data}`);
 }
@@ -134,6 +115,7 @@ function loadUserAPI(data) {
 function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
+    console.log('loadUserData', result.data);
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data,
@@ -142,6 +124,26 @@ function* loadUser(action) {
     console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
       error: err.response.data,
     });
   }
@@ -262,12 +264,12 @@ function* watchChangeNickname() {
   yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
 
-function* watchLoadMyInfo() {
-  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
-}
-
 function* watchLoadUser() {
   yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
+
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
 function* watchFollow() {
@@ -296,8 +298,8 @@ export default function* userSaga() {
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),
     fork(watchChangeNickname),
-    fork(watchLoadMyInfo),
     fork(watchLoadUser),
+    fork(watchLoadMyInfo),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogIn),

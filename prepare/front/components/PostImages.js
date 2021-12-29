@@ -1,77 +1,59 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PlusOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-import ImagesZoom from './ImagesZoom';
-import { IMG_CDN } from '../utils/CDN';
 
-const Img = styled.img`
-    display: inline-block;
-    width: 50%;    
-`
+import ImagesZoom from './ImagesZoom';
+import { backUrl } from '../config/config';
 
 const PostImages = ({ images }) => {
-    const [showImagesZoom, setShowImagesZoom] = useState(false);
+  const [showImagesZoom, setShowImagesZoom] = useState(false);
 
-    const onZoom = useCallback(() => {
-        setShowImagesZoom(true);
-    })
-    const onClose = useCallback(() => {
-        setShowImagesZoom(false);
-    })
+  const onZoom = useCallback(() => {
+    setShowImagesZoom(true);
+  }, []);
+  const onClose = useCallback(() => {
+    setShowImagesZoom(false);
+  }, []);
 
-    if (images.length === 1) {
-        return (
-            <>
-                <Img 
-                role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
-                src={IMG_CDN + images[0].src} 
-                alt={IMG_CDN + images[0].src} 
-                onClick={onZoom} />
-                {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
-            </>
-        )
-    }
-    if (images.length === 2) {
-        return (
-            <>
-                <Img 
-                role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
-                width="50%"
-                src={IMG_CDN + images[0].src} 
-                alt={IMG_CDN + images[0].src} 
-                onClick={onZoom} />
-
-                <Img 
-                role="presentation" // 굳이 클릭하지 않아도 된다는 웹 접근성 메세지
-                width="50%"
-                src={IMG_CDN + images[1].src} 
-                alt={IMG_CDN + images[1].src} 
-                onClick={onZoom} />
-                {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
-            </>
-        )
-    }
+  if (images.length === 1) {
     return (
-        <div>
-            <Img role="presentation" width="50%" src={IMG_CDN + images[0].src} alt={images[0].src} onClick={onZoom} />
-            <div
-                role="presentation"
-                style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle'}}
-                onClick={onZoom}                
-            >
-                <PlusOutlined />
-                <br />
-                {images.length - 1}
-                개의 사진 더보기
-            </div>
-            {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+      <>
+        <img role="presentation" src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+      </>
+    );
+  }
+  if (images.length === 2) {
+    return (
+      <>
+        <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img role="presentation" style={{ width: '50%', display: 'inline-block' }} src={`${images[1].src}`} alt={images[1].src} onClick={onZoom} />
+        {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+      </>
+    );
+  }
+  return (
+    <>
+      <div>
+        <img role="presentation" style={{ width: '50%' }} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <div
+          role="presentation"
+          style={{ display: 'inline-block', width: '50%', textAlign: 'center', verticalAlign: 'middle' }}
+          onClick={onZoom}
+        >
+          <PlusOutlined />
+          <br />
+          {images.length - 1}
+          개의 사진 더보기
         </div>
-    )
-}
+      </div>
+      {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
+    </>
+  );
+};
 
-PostImages.propType = {
-    images: PropTypes.arrayOf(PropTypes.object).isRequired
-}
+PostImages.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.object),
+};
 
-export default PostImages
+export default PostImages;

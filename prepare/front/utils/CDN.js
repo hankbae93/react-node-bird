@@ -1,1 +1,0 @@
-export const IMG_CDN = 'http://localhost:3065/';

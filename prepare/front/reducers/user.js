@@ -1,4 +1,4 @@
-import produce from '../utils/produce';
+import produce from '../util/produce';
 
 export const initialState = {
   loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
@@ -252,9 +252,23 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_TO_ME:
       draft.me.Posts.unshift({ id: action.data });
       break;
+      // return {
+      //   ...state,
+      //   me: {
+      //     ...state.me,
+      //     Posts: [{ id: action.data }, ...state.me.Posts],
+      //   },
+      // };
     case REMOVE_POST_OF_ME:
       draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
       break;
+      // return {
+      //   ...state,
+      //   me: {
+      //     ...state.me,
+      //     Posts: state.me.Posts.filter((v) => v.id !== action.data),
+      //   },
+      // };
     default:
       break;
   }
