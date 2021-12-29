@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('dev'));
 }
 app.use(cors({
-    origin: ["http://localhost:3000", "nodebird.com"],
+    origin: ["http://localhost:3000", "nodebird.com", "http://3.35.10.126"],
     credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
 }))
 app.use('/', express.static(path.join(__dirname, 'uploads')))
