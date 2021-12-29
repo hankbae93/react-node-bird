@@ -23,8 +23,16 @@ db.sequelize.sync()
 .catch(console.error)
 passportConfig()
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(morgan('combined'));
+    app.use(hpp());
+    app.use(helmet())
+} else {
+    app.use(morgan('dev'));
+}
+
 // 프론트단에서 보내는 데이터를 익스프레스가 라우터에서 처리할 수 있게 변환해준다.
-app.use(morgan('dev'));
+
 app.use(cors({
     origin: "http://localhost:3000",
     credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
