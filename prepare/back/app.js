@@ -30,13 +30,18 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('combined'));
     app.use(hpp());
     app.use(helmet())
+    app.use(cors({
+        origin: "http://nodebird.shop",
+        credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
+    }))
 } else {
     app.use(morgan('dev'));
+    app.use(cors({
+        origin: true,
+        credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
+    }))
 }
-app.use(cors({
-    origin: ["http://localhost:3000", "nodebird.shop"],
-    credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
-}))
+
 app.use('/', express.static(path.join(__dirname, 'uploads')))
 // 프론트단에서는 localhost:3065로만 볼 수 있고 실제 어느 폴더에 있는지 알 수 없다.
 app.use(express.json());
