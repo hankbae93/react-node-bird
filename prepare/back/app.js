@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(morgan('dev'));
 }
 app.use(cors({
-    origin: ["http://localhost:3000", "nodebird.com", "http://3.35.10.126"],
+    origin: ["http://localhost:3000", "nodebird.shop"],
     credentials: true, // 다른 도메인끼리 쿠키를 보내주고 싶을때
 }))
 app.use('/', express.static(path.join(__dirname, 'uploads')))
@@ -45,7 +45,12 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     saveUninitialized: false,
     resave: false,
-    secret: process.env.COOKIE_SECRET
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: process.env.NODE_ENV === 'production' && ".nodebird.shop"
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -63,9 +68,6 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashtagRouter);
-// 에러처리 미들웨어 작성 가능
-// app.use((err, req, res, next) => { 
 
-// })
 
 app.listen(80, () => console.log("서버 실행 중 1234"))
