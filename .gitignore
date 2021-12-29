@@ -39,6 +39,6 @@ jspm_packages
 .next
 .serverless
 /front/build/
-config
+
 
 react-nodebird.pem
