@@ -12,7 +12,7 @@ module.exports = withBundleAnalyzer({
         return {
             ...config,
             mode: prod ? 'production' : 'development',
-            devtool: prod ? 'hidden-source-map' : 'eval',
+            devtool: prod ? 'inline-source-map' : 'eval', // 배포환경에서는 꼭 바꿔놔야된다.
             plugins: [
                 ...config.plugins,
                 new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ko$/)
